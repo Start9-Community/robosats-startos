@@ -1,5 +1,4 @@
 import { VersionInfo, IMPOSSIBLE } from '@start9labs/start-sdk'
-import { rm } from 'fs/promises'
 
 export const v_0_8_5_1 = VersionInfo.of({
   version: '0.8.5:1',
@@ -26,11 +25,11 @@ export const v_0_8_5_1 = VersionInfo.of({
 - start-sdk → 1.5.0`,
   },
   migrations: {
-    up: async ({ effects }) => {
-      await rm('/media/startos/volumes/main/start9', { recursive: true }).catch(
-        console.error,
-      )
-    },
-    down: IMPOSSIBLE,
+    // 0.8.5-alpha was pulled (incompatible with current coordinators); no
+    // upgrade path leads into it.
+    up: IMPOSSIBLE,
+    // Let boxes stranded on 0.8.5:1 downgrade to 0.8.4:3. No data changes are
+    // needed — the difference was the client image, not on-disk data.
+    down: async () => {},
   },
 })
