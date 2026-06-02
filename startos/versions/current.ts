@@ -1,7 +1,7 @@
 import { VersionInfo, IMPOSSIBLE } from '@start9labs/start-sdk'
 import { rm } from 'fs/promises'
 
-export const v_0_8_4_3 = VersionInfo.of({
+export const current = VersionInfo.of({
   version: '0.8.4:3',
   releaseNotes: {
     en_US: `- Reverts the RoboSats client to 0.8.4-alpha — 0.8.5-alpha was incompatible with current coordinators
