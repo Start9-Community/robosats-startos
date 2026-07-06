@@ -1,6 +1,8 @@
 import { sdk } from './sdk'
 import { i18n } from './i18n'
 import { uiHostId, uiInterfaceId } from './interfaces'
+import { bridgeAddress } from './utils'
+import { socksHostId, socksPort } from 'tor-startos/startos/utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   /**
@@ -10,14 +12,24 @@ export const main = sdk.setupMain(async ({ effects }) => {
    */
   console.info(i18n('Starting Robosats!'))
 
-  // Tor's SOCKS proxy container IP — replaces the retired `tor.startos` DNS name.
-  // Robosats restarts if the IP changes.
-  const torIp = await sdk.getContainerIp(effects, { packageId: 'tor' }).const()
+  // Tor's SOCKS proxy over the LXC bridge. tor binds SOCKS at <osIp>:9050 and
+  // the 9050 fallback keeps the mapped value constant, so this `.const()` never
+  // restarts Robosats on tor install/update/uninstall (only a healing restart
+  // if tor's SOCKS ever landed on a different port). Split into IP and port for
+  // the daemon's separate `TOR_PROXY_IP`/`TOR_PROXY_PORT` env.
+  const [torIp, torPort] = (
+    await bridgeAddress(effects, {
+      packageId: 'tor',
+      hostId: socksHostId,
+      internalPort: socksPort,
+      fallbackPort: socksPort,
+    }).const()
+  ).split(':')
 
-  // The service's own LXC-bridge (lxcbr0) URL for its `ui` interface, replacing
-  // the retired `robosats.startos:<port>` DNS name for the in-box self-check.
-  // The map fn returns just the resolved URL, so `.const()` re-runs `main` only
-  // if that URL changes (binding removed/re-added).
+  // The service's own LXC-bridge (lxcbr0) URL for its `ui` interface, used by
+  // the in-box `/selfhosted` health check. The map fn returns just the resolved
+  // URL, so `.const()` re-runs `main` only if that URL changes (binding
+  // removed/re-added).
   const uiUrl = await sdk.host
     .getOwn(effects, uiHostId, (host) => {
       const iface = Object.values(host?.bindings ?? {})
@@ -54,7 +66,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
       command: sdk.useEntrypoint(),
       env: {
         TOR_PROXY_IP: torIp,
-        TOR_PROXY_PORT: '9050',
+        TOR_PROXY_PORT: torPort,
       },
     },
     ready: {
