@@ -68,7 +68,7 @@ No setup wizard or credentials needed. The client is ready to use immediately af
 
 | Setting | Value | Purpose |
 |---------|-------|---------|
-| `TOR_PROXY_IP` | `tor.startos` | Tor SOCKS proxy address |
+| `TOR_PROXY_IP` | Tor SOCKS bridge IP | Tor SOCKS proxy address |
 | `TOR_PROXY_PORT` | `9050` | Tor SOCKS proxy port |
 
 ### User-Configurable Settings

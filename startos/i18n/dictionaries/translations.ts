@@ -28,9 +28,9 @@ export default {
   fr_FR: {
     0: 'Démarrage de Robosats !',
     1: 'Interface web',
-    2: 'L\'interface web est prête',
-    3: 'L\'interface web n\'est pas prête',
+    2: "L'interface web est prête",
+    3: "L'interface web n'est pas prête",
     4: 'Interface web',
-    5: 'L\'interface web de Robosats',
+    5: "L'interface web de Robosats",
   },
 } satisfies Record<string, LangDict>
