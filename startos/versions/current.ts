@@ -1,7 +1,7 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.8.5:0',
+  version: '0.8.5:1',
   releaseNotes: {
     en_US: `Updated RoboSats to 0.8.5-alpha.
 
