@@ -1,7 +1,7 @@
 import { sdk } from './sdk'
 import { i18n } from './i18n'
 import { uiHostId, uiInterfaceId } from './interfaces'
-import { bridgeAddress } from './utils'
+import {} from './utils'
 import { socksHostId, socksPort } from 'tor-startos/startos/utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
@@ -18,12 +18,14 @@ export const main = sdk.setupMain(async ({ effects }) => {
   // if tor's SOCKS ever landed on a different port). Split into IP and port for
   // the daemon's separate `TOR_PROXY_IP`/`TOR_PROXY_PORT` env.
   const [torIp, torPort] = (
-    await bridgeAddress(effects, {
-      packageId: 'tor',
-      hostId: socksHostId,
-      internalPort: socksPort,
-      fallbackPort: socksPort,
-    }).const()
+    await sdk.host
+      .getBridgeAddress(effects, {
+        packageId: 'tor',
+        hostId: socksHostId,
+        internalPort: socksPort,
+        fallbackPort: socksPort,
+      })
+      .const()
   ).split(':')
 
   // The service's own LXC-bridge (lxcbr0) URL for its `ui` interface, used by

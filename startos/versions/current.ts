@@ -1,33 +1,23 @@
 import { VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.8.5:1',
+  version: '0.8.5:2',
   releaseNotes: {
-    en_US: `Updated RoboSats to 0.8.5-alpha.
+    en_US: `Resolves the addresses of connected services more reliably.
 
-This release also migrates the package to start-sdk 2.0 (requires StartOS 0.4.0-beta.10 or later).
+RoboSats looked up where to reach its dependencies through a field that only applies to one of the two ways a service can publish a port. It now reads the address itself, so a dependency changing how it serves TLS can no longer leave RoboSats unable to find it. Nothing changes in normal operation.`,
+    es_ES: `Resuelve de forma más fiable las direcciones de los servicios conectados.
 
-Full release notes: https://github.com/RoboSats/robosats/releases`,
-    es_ES: `Actualiza RoboSats a 0.8.5-alpha.
+RoboSats localizaba sus dependencias mediante un campo que solo se aplica a una de las dos formas en que un servicio puede publicar un puerto. Ahora lee la dirección en sí, de modo que si una dependencia cambia su forma de servir TLS, RoboSats seguirá encontrándola. En funcionamiento normal no cambia nada.`,
+    de_DE: `Ermittelt die Adressen verbundener Dienste zuverlässiger.
 
-Esta versión también migra el paquete a start-sdk 2.0 (requiere StartOS 0.4.0-beta.10 o posterior).
+RoboSats suchte seine Abhängigkeiten über ein Feld, das nur für eine der beiden Arten gilt, auf die ein Dienst einen Port veröffentlichen kann. Jetzt wird die Adresse selbst gelesen, sodass eine Abhängigkeit, die ihre TLS-Bereitstellung ändert, für RoboSats auffindbar bleibt. Im normalen Betrieb ändert sich nichts.`,
+    pl_PL: `Pewniej ustala adresy połączonych usług.
 
-Notas de la versión completas: https://github.com/RoboSats/robosats/releases`,
-    de_DE: `Aktualisiert RoboSats auf 0.8.5-alpha.
+RoboSats wyszukiwał swoje zależności przez pole, które dotyczy tylko jednego z dwóch sposobów publikowania portu przez usługę. Teraz odczytuje sam adres, więc zależność zmieniająca sposób udostępniania TLS nadal pozostanie odnajdywalna dla RoboSats. W normalnej pracy nic się nie zmienia.`,
+    fr_FR: `Détermine plus fiablement les adresses des services connectés.
 
-Diese Version stellt das Paket außerdem auf start-sdk 2.0 um (erfordert StartOS 0.4.0-beta.10 oder neuer).
-
-Vollständige Versionshinweise: https://github.com/RoboSats/robosats/releases`,
-    pl_PL: `Aktualizuje RoboSats do 0.8.5-alpha.
-
-Ta wersja przenosi też pakiet na start-sdk 2.0 (wymaga StartOS 0.4.0-beta.10 lub nowszego).
-
-Pełne informacje o wydaniu: https://github.com/RoboSats/robosats/releases`,
-    fr_FR: `Met à jour RoboSats vers 0.8.5-alpha.
-
-Cette version fait également passer le paquet à start-sdk 2.0 (nécessite StartOS 0.4.0-beta.10 ou une version ultérieure).
-
-Notes de version complètes : https://github.com/RoboSats/robosats/releases`,
+RoboSats localisait ses dépendances via un champ qui ne s'applique qu'à l'un des deux modes de publication d'un port par un service. Il lit désormais l'adresse elle-même : une dépendance qui change sa façon de servir TLS reste donc trouvable par RoboSats. Rien ne change en fonctionnement normal.`,
   },
   migrations: {},
 })
