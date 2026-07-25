@@ -1,7 +1,6 @@
 import { sdk } from './sdk'
 import { i18n } from './i18n'
 import { uiHostId, uiInterfaceId } from './interfaces'
-import {} from './utils'
 import { socksHostId, socksPort } from 'tor-startos/startos/utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {

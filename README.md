@@ -34,29 +34,29 @@
 
 ## Image and Container Runtime
 
-| Property | Value |
-|----------|-------|
-| Image | `recksato/robosats-client` |
-| Architectures | x86_64, aarch64 |
-| Entrypoint | Default upstream entrypoint |
+| Property      | Value                       |
+| ------------- | --------------------------- |
+| Image         | `recksato/robosats-client`  |
+| Architectures | x86_64, aarch64             |
+| Entrypoint    | Default upstream entrypoint |
 
 ---
 
 ## Volume and Data Layout
 
-| Volume | Mount Point | Purpose |
-|--------|-------------|---------|
-| `main` | `/root` | Client data, robot tokens |
+| Volume | Mount Point | Purpose                   |
+| ------ | ----------- | ------------------------- |
+| `main` | `/root`     | Client data, robot tokens |
 
 ---
 
 ## Installation and First-Run Flow
 
-| Step | Upstream | StartOS |
-|------|----------|---------|
-| Installation | Docker or hosted client | Install from marketplace or sideload `.s9pk` |
-| Tor setup | Manual Tor proxy configuration | Auto-configured via Tor dependency |
-| First use | Open web UI, generate robot | Same — open web UI and generate robot |
+| Step         | Upstream                       | StartOS                                      |
+| ------------ | ------------------------------ | -------------------------------------------- |
+| Installation | Docker or hosted client        | Install from marketplace or sideload `.s9pk` |
+| Tor setup    | Manual Tor proxy configuration | Auto-configured via Tor dependency           |
+| First use    | Open web UI, generate robot    | Same — open web UI and generate robot        |
 
 No setup wizard or credentials needed. The client is ready to use immediately after install.
 
@@ -66,14 +66,15 @@ No setup wizard or credentials needed. The client is ready to use immediately af
 
 ### Auto-Configured by StartOS
 
-| Setting | Value | Purpose |
-|---------|-------|---------|
-| `TOR_PROXY_IP` | Tor SOCKS bridge IP | Tor SOCKS proxy address |
-| `TOR_PROXY_PORT` | `9050` | Tor SOCKS proxy port |
+| Setting          | Value               | Purpose                 |
+| ---------------- | ------------------- | ----------------------- |
+| `TOR_PROXY_IP`   | Tor SOCKS bridge IP | Tor SOCKS proxy address |
+| `TOR_PROXY_PORT` | `9050`              | Tor SOCKS proxy port    |
 
 ### User-Configurable Settings
 
 All configuration is done through the RoboSats web interface:
+
 - Robot identity generation
 - Order creation and management
 - Coordinator selection
@@ -82,9 +83,9 @@ All configuration is done through the RoboSats web interface:
 
 ## Network Access and Interfaces
 
-| Interface | Port | Protocol | Type | Description |
-|-----------|------|----------|------|-------------|
-| Web UI | 12596 | HTTP | ui | RoboSats client interface |
+| Interface | Port  | Protocol | Type | Description               |
+| --------- | ----- | -------- | ---- | ------------------------- |
+| Web UI    | 12596 | HTTP     | ui   | RoboSats client interface |
 
 ---
 
@@ -111,22 +112,22 @@ None. All interaction is through the web interface.
 
 ## Health Checks
 
-| Check | Display | Method | Messages |
-|-------|---------|--------|----------|
+| Check         | Display         | Method                     | Messages                                                        |
+| ------------- | --------------- | -------------------------- | --------------------------------------------------------------- |
 | Web Interface | "Web Interface" | HTTP check (`/selfhosted`) | "The web interface is ready" / "The web interface is not ready" |
 
 ---
 
 ## Dependencies
 
-| Property | Value |
-|----------|-------|
-| **Service** | Tor (`tor`) |
-| **Required** | Yes |
-| **Version constraint** | `>=0.4.9.5` |
-| **Health checks** | `tor` must pass |
-| **Mounted volumes** | None |
-| **Purpose** | Private connections to RoboSats coordinators |
+| Property               | Value                                        |
+| ---------------------- | -------------------------------------------- |
+| **Service**            | Tor (`tor`)                                  |
+| **Required**           | Yes                                          |
+| **Version constraint** | `>=0.4.9.5`                                  |
+| **Health checks**      | `tor` must pass                              |
+| **Mounted volumes**    | None                                         |
+| **Purpose**            | Private connections to RoboSats coordinators |
 
 All coordinator communication happens over Tor for privacy.
 
