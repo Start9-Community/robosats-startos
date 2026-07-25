@@ -12,7 +12,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   console.info(i18n('Starting Robosats!'))
 
   // Tor's SOCKS proxy over the LXC bridge. tor binds SOCKS at <osIp>:9050 and
-  // the 9050 fallback keeps the mapped value constant, so this `.const()` never
+  // the 9050 fallback keeps the resolved address constant, so this `.const()` never
   // restarts Robosats on tor install/update/uninstall (only a healing restart
   // if tor's SOCKS ever landed on a different port). Split into IP and port for
   // the daemon's separate `TOR_PROXY_IP`/`TOR_PROXY_PORT` env.

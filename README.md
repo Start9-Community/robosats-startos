@@ -124,7 +124,7 @@ None. All interaction is through the web interface.
 | ---------------------- | -------------------------------------------- |
 | **Service**            | Tor (`tor`)                                  |
 | **Required**           | Yes                                          |
-| **Version constraint** | `>=0.4.9.5`                                  |
+| **Version constraint** | Declared in `startos/dependencies.ts`        |
 | **Health checks**      | `tor` must pass                              |
 | **Mounted volumes**    | None                                         |
 | **Purpose**            | Private connections to RoboSats coordinators |
@@ -155,7 +155,7 @@ All coordinator communication happens over Tor for privacy.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development workflow.
+Build and development workflow follow the StartOS packaging guide: <https://docs.start9.com/packaging>. Keep `README.md`, `instructions.md`, and `AGENTS.md` in sync with any change to user-visible behavior or package structure.
 
 ---
 
