@@ -3,7 +3,7 @@
 RoboSats ships the prebuilt `recksato/robosats-client` image directly — the package does not build its own client. Upstream tags carry an `-alpha` suffix (e.g. `v0.8.4-alpha`).
 
 > [!IMPORTANT]
-> **Do not bump to `v0.8.5-alpha`.** It cannot reach the current coordinators, and upstream withdrew it: there is no 0.8.5 GitHub *release*. The package shipped it twice by accident (`0.8.5:1`, then `0.8.5:0`–`0.8.5:3` after the start-sdk 2.0 migration) and was rolled back both times. `0.8.4-alpha` is the newest version upstream has actually released.
+> **Do not bump to `v0.8.5-alpha`.** It cannot reach the current coordinators, and upstream withdrew it: there is no 0.8.5 GitHub _release_. The package shipped it twice by accident (`0.8.5:1`, then `0.8.5:0`–`0.8.5:3` after the start-sdk 2.0 migration) and was rolled back both times. `0.8.4-alpha` is the newest version upstream has actually released.
 
 ## Determining the upstream version
 
@@ -27,6 +27,6 @@ Set `images.robosats.source.dockerTag` in `startos/manifest/index.ts` to `recksa
 
 ## Version graph
 
-The current version sits *below* the withdrawn `0.8.5:*` revisions in ExVer order, so moving onto it is a downgrade. It needs no special handling: `0.8.5:3` shipped with `migrations: {}`, so its `down` is undefined rather than `IMPOSSIBLE`, and its own graph walks a box back down to `0.8.4:4`, from which the current version's `up` takes over. Boxes on `0.8.5:0`–`0.8.5:2` — alpha only, never promoted — fall outside `canMigrateFrom` and are not offered the update; reinstall those.
+The current version sits _below_ the withdrawn `0.8.5:*` revisions in ExVer order, so moving onto it is a downgrade. It needs no special handling: `0.8.5:3` shipped with `migrations: {}`, so its `down` is undefined rather than `IMPOSSIBLE`, and its own graph walks a box back down to `0.8.4:4`, from which the current version's `up` takes over. Boxes on `0.8.5:0`–`0.8.5:2` — alpha only, never promoted — fall outside `canMigrateFrom` and are not offered the update; reinstall those.
 
-Note the contrast with the May 2026 rollback, which *did* have to declare the pulled version in `other`: the `0.8.5:1` shipped then set `down: IMPOSSIBLE`, leaving the installed package no way back.
+Note the contrast with the May 2026 rollback, which _did_ have to declare the pulled version in `other`: the `0.8.5:1` shipped then set `down: IMPOSSIBLE`, leaving the installed package no way back.
