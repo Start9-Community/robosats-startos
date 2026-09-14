@@ -1,19 +1,16 @@
 # Updating the upstream version
 
-RoboSats ships the prebuilt `recksato/robosats-client` image directly — the package does not build its own client. Upstream tags carry an `-alpha` suffix (e.g. `v0.8.4-alpha`).
-
-> [!IMPORTANT]
-> **Do not bump to `v0.8.5-alpha`.** It cannot reach the current coordinators, and upstream withdrew it: there is no 0.8.5 GitHub _release_. The package shipped it twice by accident (`0.8.5:1`, then `0.8.5:0`–`0.8.5:3` after the start-sdk 2.0 migration) and was rolled back both times. `0.8.4-alpha` is the newest version upstream has actually released.
+RoboSats ships the prebuilt `recksato/robosats-client` image directly — the package does not build its own client. Upstream tags carry an `-alpha` suffix (e.g. `v0.8.7-alpha`).
 
 ## Determining the upstream version
 
-Go by the GitHub **release**, not the Docker Hub tag list. Docker Hub carries tags upstream never released, `v0.8.5-alpha` among them, so "newest tag on Docker Hub" is how the withdrawn version got picked up.
+Go by the GitHub **release**, not the Docker Hub tag list. Docker Hub carries tags upstream never released, so "newest tag on Docker Hub" is not a reliable signal.
 
 ```
 gh release view -R RoboSats/robosats --json tagName -q .tagName
 ```
 
-Then confirm the matching client image exists on [`recksato/robosats-client`](https://hub.docker.com/r/recksato/robosats-client) and read its digest:
+Then confirm the matching client image exists on [`recksato/robosats-client`](https://hub.docker.com/r/recksato/robosats-client) and read its manifest-list digest (the top-level `digest` field, which covers both architectures):
 
 ```
 curl -fsSL "https://hub.docker.com/v2/repositories/recksato/robosats-client/tags/v<version>-alpha" | jq -r .digest
@@ -23,10 +20,10 @@ curl -fsSL "https://hub.docker.com/v2/repositories/recksato/robosats-client/tags
 
 Set `images.robosats.source.dockerTag` in `startos/manifest/index.ts` to `recksato/robosats-client:v<version>-alpha@sha256:<digest>`. That is the only place the image is named.
 
-**Keep the `@sha256:` digest.** Upstream force-moves these tags — `v0.8.5-alpha` was re-cut in July 2026 onto a commit 142 ahead of where it had pointed in January, so the same tag string silently yields different clients over time. The digest is the manifest list (it covers both `x86_64` and `aarch64`); pinning it is what makes a rebuild reproduce the client that was tested.
+**Keep the `@sha256:` digest.** Upstream has force-moved tags in the past — the same tag string can silently yield a different client over time. The digest is the manifest list (covers both `x86_64` and `aarch64`); pinning it makes a rebuild reproduce exactly the client that was tested.
+
+Then edit `startos/versions/current.ts` in place: the new version string (`<version>:0`) and release notes in all five languages. Don't spin the outgoing version off into its own file and don't touch `startos/versions/index.ts` — the outgoing version carries no migration, so it earns no node in the graph.
 
 ## Version graph
 
-The current version sits _below_ the withdrawn `0.8.5:*` revisions in ExVer order, so moving onto it is a downgrade. It needs no special handling: `0.8.5:3` shipped with `migrations: {}`, so its `down` is undefined rather than `IMPOSSIBLE`, and its own graph walks a box back down to `0.8.4:4`, from which the current version's `up` takes over. Boxes on `0.8.5:0`–`0.8.5:2` — alpha only, never promoted — fall outside `canMigrateFrom` and are not offered the update; reinstall those.
-
-Note the contrast with the May 2026 rollback, which _did_ have to declare the pulled version in `other`: the `0.8.5:1` shipped then set `down: IMPOSSIBLE`, leaving the installed package no way back.
+Only a version that introduced a migration gets a file under `startos/versions/` and an entry in `other`; that is `0.8.4:4` alone, whose `up` does work. Every other version, released or not, is covered by the range vertex the graph synthesizes beneath `current`, so a box on any of them updates in one hop. The full rule is [`versions.md` § When to Create a New Version File](https://docs.start9.com/packaging/versions.html#when-to-create-a-new-version-file).

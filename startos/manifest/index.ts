@@ -25,7 +25,7 @@ export const manifest = setupManifest({
     robosats: {
       source: {
         dockerTag:
-          'recksato/robosats-client:v0.8.4-alpha@sha256:85bf9ace2eafbcd7c5c61f62d81423aea63ddf08375f5cbe1090392bb49e92f8',
+          'recksato/robosats-client:v0.8.7-alpha@sha256:87b377ac3bde6fb5067fa64fd31ffbcf8861167f0e0a7f1d0d9bcc3c38cc75cb',
       },
       arch: ['x86_64', 'aarch64'],
     },
