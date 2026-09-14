@@ -13,19 +13,17 @@ gh release view -R RoboSats/robosats --json tagName -q .tagName
 Then confirm the matching client image exists on [`recksato/robosats-client`](https://hub.docker.com/r/recksato/robosats-client) and read its manifest-list digest (the top-level `digest` field, which covers both architectures):
 
 ```
-curl -fsSL "https://registry.hub.docker.com/v2/repositories/recksato/robosats-client/tags/v<version>-alpha" | jq -r .digest
+curl -fsSL "https://hub.docker.com/v2/repositories/recksato/robosats-client/tags/v<version>-alpha" | jq -r .digest
 ```
 
 ## Applying the bump
 
-1. Set `images.robosats.source.dockerTag` in `startos/manifest/index.ts` to `recksato/robosats-client:v<version>-alpha@sha256:<digest>`. That is the only place the image is named.
-
-2. Move the old `current` version out of `startos/versions/current.ts` into a new `startos/versions/v<old-version>.ts` file (with `migrations: {}`), import it in `startos/versions/index.ts`, and add it to the `other` array so the version graph can walk up from it.
-
-3. Update `startos/versions/current.ts` with the new version string (e.g. `0.8.7:0`) and release notes in all five languages.
+Set `images.robosats.source.dockerTag` in `startos/manifest/index.ts` to `recksato/robosats-client:v<version>-alpha@sha256:<digest>`. That is the only place the image is named.
 
 **Keep the `@sha256:` digest.** Upstream has force-moved tags in the past — the same tag string can silently yield a different client over time. The digest is the manifest list (covers both `x86_64` and `aarch64`); pinning it makes a rebuild reproduce exactly the client that was tested.
 
+Then edit `startos/versions/current.ts` in place: the new version string (`<version>:0`) and release notes in all five languages. Don't spin the outgoing version off into its own file and don't touch `startos/versions/index.ts` — the outgoing version carries no migration, so it earns no node in the graph.
+
 ## Version graph
 
-Previous version nodes are kept in `other` with `migrations: {}` so that the graph can walk up from any of them. Do not set `down: IMPOSSIBLE` on a version unless you are certain downgrade must be blocked forever — it leaves installed boxes with no migration path back and forces a reinstall.
+Only a version that introduced a migration gets a file under `startos/versions/` and an entry in `other`; that is `0.8.4:4` alone, whose `up` does work. Every other version, released or not, is covered by the range vertex the graph synthesizes beneath `current`, so a box on any of them updates in one hop. The full rule is [`versions.md` § When to Create a New Version File](https://docs.start9.com/packaging/versions.html#when-to-create-a-new-version-file).
