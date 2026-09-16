@@ -83,7 +83,7 @@ One interface.
 | --------- | ---- | ---- | ----- | ------------------- |
 | Web UI    | `ui` | ui   | 12596 | The Robosats client |
 
-Bound on the `ui-multi` MultiHost over HTTP and not masked.
+Bound on the `ui-multi` MultiHost as HTTPS and not masked. The client terminates its own TLS on that port with a self-signed certificate, so StartOS serves the address with its own certificate and re-encrypts to the container without validating the client's — that leg never leaves the container bridge.
 
 **There is no login.** Robosats has no server-side account — your robot identity is a token generated in the browser — so anyone who can reach this address gets the client, and whether they get _your_ trades depends on whether they have your token.
 
@@ -113,9 +113,9 @@ One check, on the only daemon.
 
 | Check     | Displayed as    | Method                                |
 | --------- | --------------- | ------------------------------------- |
-| `primary` | "Web Interface" | The client's self-hosted page answers |
+| `primary` | "Web Interface" | The image's own health probe succeeds |
 
-**It fetches a real page over the service's own bridge address**, rather than probing the port — so it reports that the client is actually serving, and it survives the address changing without depending on name resolution between containers.
+**It runs the probe the image declares for itself** — `wget` against a plain-HTTP listener nginx keeps inside the container, off the TLS port — executed in the daemon's own container. The published port is not probed: the OS proxy is the only thing meant to speak to it.
 
 It says nothing about coordinators. A coordinator that is down, or a Tor circuit that will not build, shows a green check and an error inside the interface.
 
@@ -157,9 +157,9 @@ startos_managed_env_vars:
 dependencies:
   - tor # required, kind: running, healthChecks: [tor]
 interfaces:
-  ui: { type: ui, port: 12596 } # no login; the robot token lives in the browser
+  ui: { type: ui, port: 12596, protocol: https } # no login; the robot token lives in the browser
 actions: []
 tasks: []
 health_checks:
-  - primary # checkWebUrl against the service's own bridge address + /selfhosted
+  - primary # runHealthScript: the image's own wget probe of nginx's internal plain-HTTP listener
 ```

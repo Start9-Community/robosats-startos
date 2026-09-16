@@ -26,7 +26,6 @@ export const main = sdk.setupMain(async ({ effects }) => {
       .const()
   ).split(':')
 
-  // Held outside the daemon so the health check can exec in the same container.
   const subcontainer = sdk.SubContainer.of(
     effects,
     { imageId: 'robosats' },
@@ -57,13 +56,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     },
     ready: {
       display: i18n('Web Interface'),
-      // The published port is HTTPS-only behind a self-signed cert (see
-      // `interfaces.ts`), so it is not probeable over the bridge: plain HTTP
-      // gets a 301 to the internal port, and the cert fails validation. Since
-      // 0.8.7-alpha the client ships a plain-HTTP probe on a container-internal
-      // listener for exactly this, and its own Dockerfile HEALTHCHECK is
-      // `wget -q -O- http://127.0.0.1:8080/selfhosted`. Run the same command in
-      // the daemon's container.
+      // The image's own HEALTHCHECK: nginx keeps a plain-HTTP probe off the TLS port.
       fn: () =>
         sdk.healthCheck.runHealthScript(
           ['wget', '-q', '-O-', 'http://127.0.0.1:8080/selfhosted'],
