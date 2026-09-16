@@ -1,6 +1,5 @@
 import { sdk } from './sdk'
 import { i18n } from './i18n'
-import { uiHostId, uiInterfaceId } from './interfaces'
 import { socksHostId, socksPort } from 'tor-startos/startos/utils'
 
 export const main = sdk.setupMain(async ({ effects }) => {
@@ -27,22 +26,18 @@ export const main = sdk.setupMain(async ({ effects }) => {
       .const()
   ).split(':')
 
-  // The service's own LXC-bridge (lxcbr0) URL for its `ui` interface, used by
-  // the in-box `/selfhosted` health check. The map fn returns just the resolved
-  // URL, so `.const()` re-runs `main` only if that URL changes (binding
-  // removed/re-added).
-  const uiUrl = await sdk.host
-    .getOwn(effects, uiHostId, (host) => {
-      const iface = Object.values(host?.bindings ?? {})
-        .flatMap((b) => Object.values(b.interfaces))
-        .find((i) => i.id === uiInterfaceId)
-      return iface
-        ? iface.addressInfo
-            .filter({ kind: 'bridge', predicate: (h) => !h.ssl })
-            .format('urlstring')[0]
-        : undefined
-    })
-    .const()
+  // Held outside the daemon so the health check can exec in the same container.
+  const subcontainer = sdk.SubContainer.of(
+    effects,
+    { imageId: 'robosats' },
+    sdk.Mounts.of().mountVolume({
+      volumeId: 'main',
+      subpath: null,
+      mountpoint: '/root',
+      readonly: false,
+    }),
+    'robosats-sub',
+  )
 
   /**
    * ======================== Daemons ========================
@@ -52,17 +47,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
    * Each daemon defines its own health check, which can optionally be exposed to the user.
    */
   return sdk.Daemons.of(effects).addDaemon('primary', {
-    subcontainer: sdk.SubContainer.of(
-      effects,
-      { imageId: 'robosats' },
-      sdk.Mounts.of().mountVolume({
-        volumeId: 'main',
-        subpath: null,
-        mountpoint: '/root',
-        readonly: false,
-      }),
-      'robosats-sub',
-    ),
+    subcontainer,
     exec: {
       command: sdk.useEntrypoint(),
       env: {
@@ -72,16 +57,22 @@ export const main = sdk.setupMain(async ({ effects }) => {
     },
     ready: {
       display: i18n('Web Interface'),
+      // The published port is HTTPS-only behind a self-signed cert (see
+      // `interfaces.ts`), so it is not probeable over the bridge: plain HTTP
+      // gets a 301 to the internal port, and the cert fails validation. Since
+      // 0.8.7-alpha the client ships a plain-HTTP probe on a container-internal
+      // listener for exactly this, and its own Dockerfile HEALTHCHECK is
+      // `wget -q -O- http://127.0.0.1:8080/selfhosted`. Run the same command in
+      // the daemon's container.
       fn: () =>
-        uiUrl
-          ? sdk.healthCheck.checkWebUrl(effects, `${uiUrl}/selfhosted`, {
-              successMessage: i18n('The web interface is ready'),
-              errorMessage: i18n('The web interface is not ready'),
-            })
-          : Promise.resolve({
-              result: 'starting' as const,
-              message: i18n('The web interface is not ready'),
-            }),
+        sdk.healthCheck.runHealthScript(
+          ['wget', '-q', '-O-', 'http://127.0.0.1:8080/selfhosted'],
+          subcontainer,
+          {
+            errorMessage: i18n('The web interface is not ready'),
+            message: () => i18n('The web interface is ready'),
+          },
+        ),
     },
     requires: [],
   })
