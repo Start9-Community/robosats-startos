@@ -8,8 +8,10 @@ export const uiInterfaceId = 'ui'
 
 export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   const uiMulti = sdk.MultiHost.of(effects, uiHostId)
+  // Robosats serves its own TLS on `port`, with a self-signed cert.
   const uiMultiOrigin = await uiMulti.bindPort(port, {
-    protocol: 'http',
+    protocol: 'https',
+    addSsl: { upstreamCertValidation: 'disable' },
   })
   const ui = sdk.createInterface(effects, {
     name: i18n('Web UI'),
