@@ -8,7 +8,7 @@
 
 - The **self-hosted RoboSats client** exposed as the **Web UI** interface — your private front-end to the RoboSats P2P Bitcoin exchange network.
 - All coordinator traffic is routed through Tor automatically; you do not configure a SOCKS proxy yourself.
-- A local volume that stores your robot tokens and client state, included in StartOS backups.
+- Your robot token and client settings stay in your browser. StartOS backups do not include your robot token; save it separately.
 
 This package runs the **client**, not a coordinator. Trades clear against the public RoboSats coordinators you select inside the web UI.
 
@@ -17,6 +17,10 @@ This package runs the **client**, not a coordinator. Trades clear against the pu
 1. Install [Tor](https://github.com/Start9Labs/tor-startos) first — it is a required dependency for routing RoboSats traffic.
 2. Start RoboSats and open the **Web UI** interface.
 3. On first launch the client generates a **robot token**. Save this token somewhere safe — it is your identity. Anyone with the token can act as you; losing it means losing access to any active orders and to your reputation.
+
+## Upgrading from StartOS 0.3.5
+
+The old network interface is removed. If you added a domain or .onion address to it, add an address to the **Web UI** interface instead.
 
 ## Using RoboSats
 
