@@ -1,3 +1,13 @@
+export const torDescription = {
+  en_US: 'Used to connect to RoboSats coordinators privately',
+  es_ES:
+    'Se usa para conectarse a los coordinadores de RoboSats de forma privada',
+  de_DE: 'Wird für die private Verbindung zu RoboSats-Koordinatoren verwendet',
+  pl_PL: 'Używany do prywatnego łączenia się z koordynatorami RoboSats',
+  fr_FR:
+    'Utilisé pour se connecter aux coordinateurs RoboSats de manière privée',
+}
+
 export default {
   description: {
     short: {

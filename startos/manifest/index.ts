@@ -1,16 +1,6 @@
 import { setupManifest } from '@start9labs/start-sdk'
 import i18n from './i18n'
 
-const depTorDescription = {
-  en_US: 'Used to connect to RoboSats coordinators privately',
-  es_ES:
-    'Se usa para conectarse a los coordinadores de RoboSats de forma privada',
-  de_DE: 'Wird für die private Verbindung zu RoboSats-Koordinatoren verwendet',
-  pl_PL: 'Używany do prywatnego łączenia się z koordynatorami RoboSats',
-  fr_FR:
-    'Utilisé pour se connecter aux coordinateurs RoboSats de manière privée',
-}
-
 export const manifest = setupManifest({
   id: 'robosats',
   title: 'Robosats',
@@ -28,16 +18,6 @@ export const manifest = setupManifest({
           'recksato/robosats-client:v0.8.7-alpha@sha256:87b377ac3bde6fb5067fa64fd31ffbcf8861167f0e0a7f1d0d9bcc3c38cc75cb',
       },
       arch: ['x86_64', 'aarch64'],
-    },
-  },
-  dependencies: {
-    tor: {
-      optional: false,
-      description: depTorDescription,
-      metadata: {
-        title: 'Tor',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/tor-startos/65faea17febc739d910e8c26ff4e61f6333487a8/icon.svg',
-      },
     },
   },
 })
