@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" alt="Robosats Logo" width="21%">
+  <img src="icon.svg" alt="Robosats Logo" width="21%">
 </p>
 
 # Robosats on StartOS
@@ -89,11 +89,13 @@ Bound on the `ui-multi` MultiHost as HTTPS and not masked. The client terminates
 
 All outbound traffic to coordinators goes through Tor. The client makes no direct clearnet connections to them.
 
+**A server carried over from StartOS 0.3.5** also had a host named `main`, left behind by that version's interface. The 0.8.7:2 migration retires it, freeing its port. Its addresses — a `.onion` or a domain added to it — are not moved to `ui-multi`; add one to the Web UI interface instead.
+
 ## Installation and First-Run Flow
 
 Install does nothing: no seeding, no task, no credential.
 
-**Tor must be installed and healthy** before the service will start — it is a required dependency with its own health check.
+**Tor is a required dependency** with its own health check. StartOS reports it unsatisfied until Tor is installed, running and healthy; until then the client cannot reach any coordinator.
 
 Once running, open the interface and the client generates a robot token for you. **Save that token**: it is the only way back to your robot and your orders, it is not stored on the server, and nobody can recover it for you.
 

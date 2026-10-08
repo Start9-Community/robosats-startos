@@ -18,15 +18,22 @@ Freshly scaffolded? Work the
 guide page, not a file in this repo — read it, don't copy it in.
 
 Keep `README.md` (technical reference for an AI support or administering agent) and
-`instructions.md` (end-user docs) in sync with your changes.
+`instructions.md` (end-user docs) in sync with your changes. This file restates neither:
+whoever changes the package has both, so it carries only what they don't — repo mechanics,
+a change that looks right and is not, where the next thing gets added, a naming trap, a
+build or test invocation particular to this repo.
 
-**Bugs and feature requests are GitHub issues on this repo** — file them as you find them.
+**Fix a defect you spot rather than reporting it** — you have the package open and the
+context to be sure. File **a GitHub issue on this repo** only when the call isn't yours to
+make: you can't pin the cause down, two defensible fixes exist, or it's too large to ride on
+the work in hand. An open issue is a report, not a queue — implement one when you're asked
+to or when it's labelled `Approved`, then close it with `Closes #<n>`.
+
 Don't record work in the repo instead: no `TODO.md`, no `NOTES.md`, no `PLAN.md`. What you
 verified, tried, and decided belongs in the commit message and the PR body.
 
 ## This repo
 
-- **This packages the Robosats _client_, not a coordinator.** `recksato/robosats-client` is upstream's self-hosted front end; don't document or configure it as if it ran an exchange.
-- **Tor is a hard dependency with its own health check**, because coordinators are onion services. The SOCKS lookup passes `fallbackPort` so the resolved address stays constant across tor install/update/uninstall and never restarts Robosats on tor churn; it is then split into `TOR_PROXY_IP`/`TOR_PROXY_PORT`, which the image takes as two separate values.
-- **The health check fetches `/selfhosted` over the service's own bridge address** from `sdk.host.getOwn`, not a hostname — `<pkg>.startos` is deprecated. It returns `starting` rather than failing while that address is unresolved.
-- **There is nothing worth backing up.** The robot token lives in the browser and funds are on Lightning — don't add state, and don't imply a restore recovers an identity.
+- **This packages the Robosats _client_, not a coordinator.** Don't document or configure it as if it ran an exchange.
+- **Keep `fallbackPort` on the Tor SOCKS lookup in `main.ts`.** Without it the resolved address changes with Tor's install state, and the `.const()` restarts Robosats on every Tor install, update or uninstall.
+- **Don't add state to the `main` volume or imply a restore recovers an identity** — the robot token lives in the browser and funds are on Lightning.
