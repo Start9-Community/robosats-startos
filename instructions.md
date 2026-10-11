@@ -18,10 +18,6 @@ This package runs the **client**, not a coordinator. Trades clear against the pu
 2. Start RoboSats and open the **Web UI** interface.
 3. On first launch the client generates a **robot token**. Save this token somewhere safe — it is your identity. Anyone with the token can act as you; losing it means losing access to any active orders and to your reputation.
 
-## Upgrading from StartOS 0.3.5
-
-The old network interface is removed. If you added a domain or .onion address to it, add an address to the **Web UI** interface instead.
-
 ## Using RoboSats
 
 ### Web UI

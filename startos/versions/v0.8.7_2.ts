@@ -1,0 +1,19 @@
+import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
+import { sdk } from '../sdk'
+
+export const v_0_8_7_2 = VersionInfo.of({
+  version: '0.8.7:2',
+  releaseNotes: {
+    en_US: `- The network interface left behind by the StartOS 0.3.5 version of this package is removed and its port freed. A domain or .onion address you had added to it no longer reaches RoboSats; add one to the Web UI interface instead.`,
+    es_ES: `- Se elimina la interfaz de red que dejó la versión de este paquete para StartOS 0.3.5 y se libera su puerto. Un dominio o una dirección .onion que hubieras añadido a ella ya no lleva a RoboSats; añade uno a la interfaz «Interfaz web» en su lugar.`,
+    de_DE: `- Die Netzwerkschnittstelle, die die StartOS-0.3.5-Version dieses Pakets hinterlassen hatte, wird entfernt und ihr Port freigegeben. Eine Domain oder .onion-Adresse, die du ihr hinzugefügt hattest, führt nicht mehr zu RoboSats; füge stattdessen eine der Schnittstelle „Web-UI“ hinzu.`,
+    pl_PL: `- Interfejs sieciowy pozostawiony przez wersję tego pakietu dla StartOS 0.3.5 zostaje usunięty, a jego port zwolniony. Domena lub adres .onion dodany do niego nie prowadzi już do RoboSats; zamiast tego dodaj go do interfejsu „Interfejs webowy”.`,
+    fr_FR: `- L'interface réseau laissée par la version de ce paquet pour StartOS 0.3.5 est supprimée et son port libéré. Un domaine ou une adresse .onion que vous y aviez ajouté ne mène plus à RoboSats ; ajoutez-en un à l'interface « Interface web » à la place.`,
+  },
+  migrations: {
+    up: async ({ effects }) => {
+      await sdk.MultiHost.of(effects, 'main').retire()
+    },
+    down: IMPOSSIBLE,
+  },
+})
