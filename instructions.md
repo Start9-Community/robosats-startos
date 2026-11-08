@@ -16,7 +16,10 @@ This package runs the **client**, not a coordinator. Trades clear against the pu
 
 1. Install [Tor](https://github.com/Start9Labs/tor-startos) first — it is a required dependency for routing RoboSats traffic.
 2. Start RoboSats and open the **Web UI** interface.
-3. On first launch the client generates a **garage key** (it starts with `robo1`). Save this key somewhere safe — it is your identity, and a fresh robot is made from it for each trade. Anyone with the key can act as you; losing it means losing access to any active orders and to your reputation. If you have a robot token from an older version, use **Legacy** mode to recover an ongoing trade, then switch to **Garage Key** mode for new orders. Switching modes clears the robots saved in that browser, so save your token or key first.
+3. The client initially opens in **Legacy** mode, where new-order controls are disabled. For new trades, select **Garage Key** and confirm the mode change. Switching modes clears the robots and garage key saved in that browser, so save any existing tokens or key first.
+4. Select **Start**, then **Generate Garage Key**. Save the key (it starts with `robo1`) somewhere safe — it is your identity, and a fresh robot is made from it for each trade. Anyone with the key can act as you; losing it means losing access to any active orders and to your reputation. To restore an existing garage key, use **Recovery** in Garage Key mode instead.
+
+If you have a robot token from an older version, use **Recovery** in **Legacy** mode to recover an ongoing trade. Save that token before switching to Garage Key mode for new orders.
 
 ## Using RoboSats
 

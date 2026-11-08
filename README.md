@@ -85,7 +85,7 @@ One interface.
 
 Bound on the `ui-multi` MultiHost as HTTPS and not masked. The client terminates its own TLS on that port with a self-signed certificate, so StartOS serves the address with its own certificate and re-encrypts to the container without validating the client's — that leg never leaves the container bridge.
 
-**There is no login.** RoboSats has no server-side account — your identity is a garage key generated in the browser — so anyone who can reach this address gets the client, and whether they get _your_ trades depends on whether they have your token.
+**There is no login.** RoboSats has no server-side account — your identity is a garage key generated in the browser — so anyone who can reach this address gets the client, and whether they get _your_ trades depends on whether they have your garage key or legacy robot token.
 
 All outbound traffic to coordinators goes through Tor. The client makes no direct clearnet connections to them.
 
@@ -97,7 +97,9 @@ Install does nothing: no seeding, no task, no credential.
 
 **Tor is a required dependency** with its own health check. StartOS reports it unsatisfied until Tor is installed, running and healthy; until then the client cannot reach any coordinator.
 
-Once running, open the interface and the client generates a **garage key** (`robo1…`) for you. A fresh robot is derived from it for each trade. **Save that key**: it is the only way back to your robots and your orders, it is not stored on the server, and nobody can recover it for you. A robot token from before v0.8.8 still works in the client's Legacy mode, which only recovers ongoing trades; new orders need Garage Key mode, and switching modes clears the robots held in that browser.
+Once running, open the interface. The client defaults to **Legacy** mode, where Start and new-order controls are disabled. For new trades, select **Garage Key**, confirm the mode change, then select **Start** and **Generate Garage Key** to create a key (`robo1…`). A fresh robot is derived from it for each trade. **Save that key**: it is the only way back to your robots and your orders, it is not stored on the server, and nobody can recover it for you. Restore an existing garage key through **Recovery** in Garage Key mode.
+
+A robot token from before v0.8.8 still works through **Recovery** in Legacy mode, which only recovers ongoing trades. Switching modes clears both the robots and the garage key held in that browser; save existing tokens or the key before confirming a switch.
 
 Coordinators are selected inside the interface. The client ships knowing the well-known ones and connects to whichever you pick.
 
